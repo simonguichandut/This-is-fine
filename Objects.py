@@ -26,7 +26,7 @@ class Particle:
         self.H  = True      # Healthy
         self.AS = False     # Infected asymptomatic
         self.S  = False     # Infected symptomatic
-        self.I  = False     # Immunized
+        self.I  = False     # Immune
         self.ISO = False    # Isolated
 
         # Changing from pre-symptomatic to symptomatic
@@ -83,7 +83,7 @@ class Particle:
 
             if self.clock > self.IT: # finished infection time
                 self.H,self.AS,self.S = True,False,False
-                self.I = True # now immunized
+                self.I = True # now Immune
                 self.ISO = False
                 self.clock = 0
 
@@ -122,10 +122,10 @@ class Box:
             
         legend_elements = [Line2D([0], [0], marker='o', color='w', label='Healthy', markerfacecolor='w', markersize=10, lw=0),
                            Line2D([0], [0], marker='o', color='r', label='Infected', markerfacecolor='r', markersize=10, lw=0),
-                           Line2D([0], [0], marker='o', color='g', label='Immunized', markerfacecolor='g', markersize=10, lw=0),
+                           Line2D([0], [0], marker='o', color='g', label='Immune', markerfacecolor='g', markersize=10, lw=0),
                            Line2D([0], [0], marker='v', color='w', label='Healthy, on CT network', markerfacecolor='w', markersize=10, lw=0),
                            Line2D([0], [0], marker='v', color='r', label='Infected, on CT network', markerfacecolor='r', markersize=10, lw=0),
-                           Line2D([0], [0], marker='v', color='g', label='Immunized, on CT network', markerfacecolor='g', markersize=10, lw=0)]
+                           Line2D([0], [0], marker='v', color='g', label='Immune, on CT network', markerfacecolor='g', markersize=10, lw=0)]
 
         self.ax1.legend(handles=legend_elements, ncol=2, bbox_to_anchor=(1,0.01),bbox_transform=self.ax1.transAxes, frameon=False)
 
@@ -136,7 +136,7 @@ class Box:
         vx,vy = v*np.cos(theta), v*np.sin(theta)
         return x,y,vx,vy
 
-    def plot_pop(self,pop ,show, iteration, graph, dt):
+    def plot_pop(self,pop, iteration, graph, dt, show):
 
         self.ax2.set_xlim([0,5])
         self.ax2.set_ylim([0,pop.Nparticles/4+1])
@@ -173,7 +173,7 @@ class Box:
         if show==True:
             plt.show()
         else:
-            self.fig.savefig('png/%06d.png'%iteration, bbox_inches='tight', dpi=200)
+            self.fig.savefig('box/%06d.png'%iteration, bbox_inches='tight', dpi=300)
 
         for point in points:
             point.pop(0).remove()
@@ -218,14 +218,14 @@ class Population:
 class THE_CURVE:
     def __init__(self):
         # Init compile plot
-        self.fig2, self.ax3 = plt.subplots()
-        self.ax3.set(xlabel='Time', ylabel='Population')
+        self.fig, self.ax = plt.subplots()
+        self.ax.set(xlabel='Time', ylabel='Population')
         self.not_infected = []
         self.infected = []
         self.immune = []
         self.iteration = []
 
-    def plot_comp(self, pop, iteration=0):
+    def update(self, pop, iteration=0):
 
         count_not_infected = 0
         count_infected = 0
@@ -245,75 +245,69 @@ class THE_CURVE:
         self.infected.append(count_infected)
         self.immune.append(count_immune)
 
-    def show(self,show=False):
+    def make_curve(self,show=False):
         self.iteration = np.array(self.iteration)
         self.infected = np.array(self.infected)
         self.immune = np.array(self.immune)
         self.not_infected = np.array(self.not_infected)
 
-        self.ax3.set_xlim([0,len(self.iteration)-1])
-        self.ax3.set_ylim([0,self.infected[0]+self.not_infected[0]+self.immune[0]])
+        self.ax.set_xlim([0,len(self.iteration)-1])
+        self.ax.set_ylim([0,self.infected[0]+self.not_infected[0]+self.immune[0]])
 
-        self.ax3.fill_between(self.iteration, self.infected+self.not_infected, self.infected+self.not_infected+self.immune, color='g')
-        self.ax3.fill_between(self.iteration, self.infected, self.infected+self.not_infected, color='w')
-        self.ax3.fill_between(self.iteration, 0, self.infected, color='r')
+        self.ax.fill_between(self.iteration, self.infected+self.not_infected, self.infected+self.not_infected+self.immune, color='g')
+        self.ax.fill_between(self.iteration, self.infected, self.infected+self.not_infected, color='w')
+        self.ax.fill_between(self.iteration, 0, self.infected, color='r')
 
-        if show==True:
+        if show:
             plt.show()
+        else:
+            self.fig.savefig('curve.png', bbox_inches='tight', dpi=300)
 
-    def save(self):
+    #### besoin de ce saveV1?
+    # def save(self):
 
-        self.fig2, self.ax3 = plt.subplots()
-        self.ax3.set(xlabel='Time', ylabel='Population')
+    #     self.fig2, self.ax = plt.subplots()
+    #     self.ax.set(xlabel='Time', ylabel='Population')
+
+    #     self.iteration = np.array(self.iteration)
+    #     self.infected = np.array(self.infected)
+    #     self.immune = np.array(self.immune)
+    #     self.not_infected = np.array(self.not_infected)
+
+    #     self.ax.set_xlim([0,len(self.iteration)-1])
+    #     self.ax.set_ylim([0,self.infected[0]+self.not_infected[0]+self.immune[0]])
+
+    #     for i in range(len(self.iteration)):
+
+    #         self.ax.fill_between(self.iteration, self.infected + self.not_infected,self.infected + self.not_infected + self.immune, color='g')
+    #         self.ax.fill_between(self.iteration, self.infected, self.infected + self.not_infected, color='w')
+    #         self.ax.fill_between(self.iteration, 0, self.infected, color='r')
+    #         line = self.ax.plot([self.iteration[i],self.iteration[i]],[0,self.infected[0]+self.not_infected[0]+self.immune[0]], color = 'b')
+
+    #         self.fig2.savefig('curve/%06d.png'%i, bbox_inches='tight', dpi=300)
+
+    #         line.remove(self.ax.lines.pop(-1))
+
+    def save_frames(self):
+
+        self.fig2, self.ax = plt.subplots()
+        self.ax.set(xlabel='Time', ylabel='Population')
 
         self.iteration = np.array(self.iteration)
         self.infected = np.array(self.infected)
         self.immune = np.array(self.immune)
         self.not_infected = np.array(self.not_infected)
 
-        self.ax3.set_xlim([0,len(self.iteration)-1])
-        self.ax3.set_ylim([0,self.infected[0]+self.not_infected[0]+self.immune[0]])
-
-        for i in range(len(self.iteration)):
-
-            self.ax3.fill_between(self.iteration, self.infected + self.not_infected,self.infected + self.not_infected + self.immune, color='g')
-            self.ax3.fill_between(self.iteration, self.infected, self.infected + self.not_infected, color='w')
-            self.ax3.fill_between(self.iteration, 0, self.infected, color='r')
-            line = self.ax3.plot([self.iteration[i],self.iteration[i]],[0,self.infected[0]+self.not_infected[0]+self.immune[0]], color = 'b')
-
-            self.fig2.savefig('curve/%06d.png'%i, bbox_inches='tight', dpi=300)
-
-            line.remove(self.ax3.lines.pop(-1))
-
-    def saveV2(self):
-
-        self.fig2, self.ax3 = plt.subplots()
-        self.ax3.set(xlabel='Time', ylabel='Population')
-
-        self.iteration = np.array(self.iteration)
-        self.infected = np.array(self.infected)
-        self.immune = np.array(self.immune)
-        self.not_infected = np.array(self.not_infected)
-
-        self.ax3.set_xlim([0,len(self.iteration)-1])
-        self.ax3.set_ylim([0,self.infected[0]+self.not_infected[0]+self.immune[0]])
+        self.ax.set_xlim([0,len(self.iteration)-1])
+        self.ax.set_ylim([0,self.infected[0]+self.not_infected[0]+self.immune[0]])
 
         for i in range(len(self.iteration)):
             j= i+1
 
-            self.ax3.fill_between(self.iteration[0:j], self.infected[0:j] + self.not_infected[0:j],self.infected[0:j] + self.not_infected[0:j] + self.immune[0:j], color='g')
-            self.ax3.fill_between(self.iteration[0:j], self.infected[0:j], self.infected[0:j] + self.not_infected[0:j], color='w')
-            self.ax3.fill_between(self.iteration[0:j], 0, self.infected[0:j], color='r')
+            self.ax.fill_between(self.iteration[0:j], self.infected[0:j] + self.not_infected[0:j],self.infected[0:j] + self.not_infected[0:j] + self.immune[0:j], color='g')
+            self.ax.fill_between(self.iteration[0:j], self.infected[0:j], self.infected[0:j] + self.not_infected[0:j], color='w')
+            self.ax.fill_between(self.iteration[0:j], 0, self.infected[0:j], color='r')
 
-            self.fig2.savefig('curve/%06d.png'%i, bbox_inches='tight', dpi=200)
+            self.fig.savefig('curve/%06d.png'%i, bbox_inches='tight', dpi=300)
 
 
-
-        
-if __name__=="__main__":
-    box = Box(3,3)
-    pop = Population(box,100,1,0.5,10,2,0.5)
-    pop.particle_list[0].infect()
-    for i in (14,20,25,44,65):
-        pop.particle_list[i].ISO=True
-    box.plot_pop(pop,show=False,iteration=0)

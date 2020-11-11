@@ -1,0 +1,20 @@
+Simulations in this folder were ran with
+
+Nparticles = 200        # number of particles in the box
+charge = 0.04           # particle charge
+wall_factor = 0.1       # wall repulsion strength
+action_radius = 0.15    # radius for interaction (infection & coulomb)
+boxsize = 3             # size of (square) box
+
+I_time = 1.5            # total infection time
+prob_symptom = 0.15     # fraction of population that develops symptoms
+PS_time = 0.3           # pre-symptomatic time
+prob_infect = 0.25       # probability of infection within action radius at each timestep
+
+dt = 0.05               # timestep
+Niter = 300             # Number of iterations
+
+seed(2)                 # Fixed random seed. Comment out for pure random
+
+
+on Nov 10 2020 by Simon

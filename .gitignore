@@ -1,2 +1,6 @@
 __pycache__/
-*DS_Store
+.DS_Store
+png/.DS_Store
+curve/.DS_Store
+run/param_space_study.pdf
+run/param_space_study.key
