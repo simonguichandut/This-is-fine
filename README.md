@@ -2,7 +2,7 @@
 
 Context : COVID-19 in [March 2020](https://imgur.com/gallery/c4jt321). COVID-19 in [November 2020](https://imgur.com/gallery/ZzmZP).
 
-There has been much discussion recently about the potential for "digital" herd immunity using contact tracing and cellphones. See for example Bulchandani, Vir B., et al., [arXiv:2004.07237, 2020](https://arxiv.org/abs/2004.07237). We wanted to see if we could use a simple particles in a box simulation to model the spread of an epidemic, and use graph theory to design efficient algorithms for contact tracing.
+There has been much discussion recently about the potential for "digital" herd immunity using contact tracing and cellphones. See for example Bulchandani, Vir B., et al., [arXiv:2004.07237, 2020](https://arxiv.org/abs/2004.07237). We wanted to see if we could use a simple particles in a box simulation to model the spread of an epidemic, and use graph theory to design an efficient algorithm for contact tracing.
 
 For a range of box, particle, and disease parameters, a "patient zero" begins to infect others in the box. Infected individuals stay in the box, infecting others, throughout the pre-symptomatic phase of the disease. They isolate once they develop symptoms. Nevertheless, the epidemic spreads. We implement a contact tracing network for a fraction of the population to alert people who have been in contact with a sick person, telling them to get tested. This allows us to isolate these people while they are still pre-symptomatic, thus better controling the epidemic.
 
@@ -34,23 +34,23 @@ In simulations where there is contact tracing, the network only begins after 70 
 The same random seed, which generates initial positions and velocities, is used in each simulation to minimize random fluctuations.
 
 ## No contact tracing 
-![](runs/run_20_infection_prob/0CT/box.gif)
-![](runs/run_20_infection_prob/0CT/curve.png)
+![](runs/20_infection_prob/0CT/box.gif)
+![](runs/20_infection_prob/0CT/curve.png)
 Almost 90% of the population has been infected.
 
 ## 20% contact tracing
-![](runs/run_20_infection_prob/20CT/box.gif)
-![](runs/run_20_infection_prob/20CT/curve.png)
+![](runs/20_infection_prob/20CT/box.gif)
+![](runs/20_infection_prob/20CT/curve.png)
 With only some contact tracing, there is no significant improvement. 
 
 ## 50% contact tracing
-![](runs/run_20_infection_prob/50CT/box.gif)
-![](runs/run_20_infection_prob/50CT/curve.png)
+![](runs/20_infection_prob/50CT/box.gif)
+![](runs/20_infection_prob/50CT/curve.png)
 The contact tracing network is starting to be effective! The infection curve has been flattened. Still, many individuals end up being infected.
 
 ## 80% contact tracing
-![](runs/run_20_infection_prob/80CT/box.gif)
-![](runs/run_20_infection_prob/80CT/curve.png)
+![](runs/20_infection_prob/80CT/box.gif)
+![](runs/20_infection_prob/80CT/curve.png)
 The true power of contact tracing becomes apparent once a threshold fraction of the population on the network is passed! For these sets of parameters, the threshold is close to 80%.
 
 ## Parameter space
